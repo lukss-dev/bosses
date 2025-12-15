@@ -1,0 +1,136 @@
+:root {
+  --bg: #0b0e14;
+  --panel: #141a2a;
+  --gold: #c9a24d;
+  --text: #e6e6e6;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: 'Cinzel', serif;
+}
+
+body {
+  background: radial-gradient(circle, #12182b, var(--bg));
+  color: var(--text);
+  margin: 0;
+  padding-bottom: 80px;
+}
+
+header {
+  text-align: center;
+  padding: 40px 0 20px;
+}
+
+header h1 {
+  color: var(--gold);
+}
+
+.add-boss {
+  width: 60%;
+  margin: 0 auto 40px;
+  padding: 20px;
+  background: var(--panel);
+  border: 1px solid var(--gold);
+  border-radius: 10px;
+  text-align: center;
+}
+
+.add-boss input,
+.add-boss button {
+  width: 80%;
+  margin: 6px 0;
+  padding: 8px;
+  background: #0c111d;
+  border: 1px solid #2a2f45;
+  color: white;
+}
+
+.add-boss button {
+  background: var(--gold);
+  color: black;
+  cursor: pointer;
+}
+
+.bosses-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.boss-card {
+  width: 280px;
+  background: #1a1f2e;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #333;
+  position: relative;
+}
+
+.boss-card.vencido {
+  opacity: 0.4;
+  filter: grayscale(1);
+}
+
+.boss-card img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.boss-info {
+  padding: 15px;
+}
+
+.rank {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: bold;
+  margin-bottom: 6px;
+  background: #333;
+}
+
+.rank.S { background: #b91c1c; }
+.rank.A { background: #c9a24d; color: black; }
+.rank.B { background: #2563eb; }
+.rank.C { background: #16a34a; }
+.rank.D { background: #4b5563; }
+.rank.E { background: #374151; }
+
+.tag {
+  display: inline-block;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 6px;
+  background: #7a1e1e;
+}
+
+.btn-vencer {
+  display: none;
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 14px;
+  background: var(--gold);
+  color: black;
+  border: none;
+  cursor: pointer;
+}
+
+.boss-card.show-btn .btn-vencer {
+  display: block;
+}
+
+/* INPUT DE IMAGEM MAIS COMPACTO */
+.add-boss input[type="file"] {
+  width: 50%;
+  margin: 10px auto;
+  display: block;
+  background: transparent;
+  color: var(--text);
+  border: none;
+}
