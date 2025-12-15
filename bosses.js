@@ -1,15 +1,24 @@
-// 🔥 CONFIG FIREBASE (VOCÊ VAI TROCAR)
+// Importando os módulos necessários do Firebase
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc } from "firebase/firestore";
+
+// Sua configuração do Firebase
 const firebaseConfig = {
-  apiKey: "SUA_API_KEY",
-  authDomain: "SEU_DOMINIO.firebaseapp.com",
-  projectId: "SEU_PROJECT_ID",
+  apiKey: "AIzaSyD5okhGhj0OS8zj1XNuc-0SJJ27cIpFsts",
+  authDomain: "agenda-dcdca.firebaseapp.com",
+  projectId: "agenda-dcdca",
+  storageBucket: "agenda-dcdca.firebasestorage.app",
+  messagingSenderId: "195952449830",
+  appId: "1:195952449830:web:cf73943915cfaa7774c9e7"
 };
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
 
-// -------------------------
+// Inicializando o Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
+
+// Função para calcular o rank
 function calcularRank(d) {
   if (d <= 2) return "E";
   if (d <= 4) return "D";
@@ -19,12 +28,12 @@ function calcularRank(d) {
   return "S";
 }
 
-// 🔥 ADICIONAR BOSS
-function adicionarBoss() {
-  const nome = nomeBoss.value;
-  const fraqueza = fraquezaBoss.value;
-  const dificuldade = Number(dificuldadeBoss.value);
-  const img = imgBoss.files[0];
+// Função para adicionar um boss
+async function adicionarBoss() {
+  const nome = document.getElementById('nomeBoss').value;
+  const fraqueza = document.getElementById('fraquezaBoss').value;
+  const dificuldade = Number(document.getElementById('dificuldadeBoss').value);
+  const img = document.getElementById('imgBoss').files[0];
 
   if (!nome || !img) {
     alert("Preencha tudo.");
@@ -35,28 +44,34 @@ function adicionarBoss() {
   const rank = calcularRank(dificuldade);
 
   reader.onload = async () => {
-    await db.collection("bosses").add({
-      nome,
-      fraqueza,
-      dificuldade,
-      rank,
-      img: reader.result,
-      vencido: false
-    });
+    try {
+      await addDoc(collection(db, "bosses"), {
+        nome,
+        fraqueza,
+        dificuldade,
+        rank,
+        img: reader.result,
+        vencido: false
+      });
 
-    nomeBoss.value = "";
-    fraquezaBoss.value = "";
-    imgBoss.value = "";
+      // Limpando os campos após adicionar
+      document.getElementById('nomeBoss').value = "";
+      document.getElementById('fraquezaBoss').value = "";
+      document.getElementById('imgBoss').value = "";
+    } catch (error) {
+      console.error("Erro ao adicionar o boss: ", error);
+    }
   };
 
   reader.readAsDataURL(img);
 }
 
-// 🔥 CARREGAR BOSSES EM TEMPO REAL
-db.collection("bosses").onSnapshot(snapshot => {
+// Função para carregar os bosses em tempo real
+onSnapshot(collection(db, "bosses"), (snapshot) => {
+  const bossesContainer = document.getElementById('bossesContainer');
   bossesContainer.innerHTML = "";
 
-  snapshot.forEach(doc => {
+  snapshot.forEach((doc) => {
     const boss = doc.data();
 
     const card = document.createElement("div");
@@ -77,13 +92,16 @@ db.collection("bosses").onSnapshot(snapshot => {
   });
 });
 
-// 🔥 MARCAR COMO VENCIDO
-function marcarVencido(id) {
-  db.collection("bosses").doc(id).update({
+// Função para marcar um boss como vencido
+async function marcarVencido(id) {
+  const bossRef = doc(db, "bosses", id);
+  await updateDoc(bossRef, {
     vencido: true
   });
 }
 
+// Função para mostrar o botão de marcar vencido
 function mostrarBotao(img) {
   img.parentElement.classList.toggle("show-btn");
 }
+
